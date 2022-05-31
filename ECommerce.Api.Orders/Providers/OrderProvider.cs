@@ -3,7 +3,6 @@
     using AutoMapper;
     using ECommerce.Api.Orders.Db;
     using ECommerce.Api.Orders.Interfaces;
-    using ECommerce.Api.Orders.Models;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Logging;
     using System;
