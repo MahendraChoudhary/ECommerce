@@ -15,7 +15,7 @@
             this.productProvider = productProvider;
         }
 
-        [HttpGet]
+        [HttpGet(template: "all")]
         public async Task<IActionResult> GetProductsAsync()
         {
             var result = await productProvider.GetProductsAsync();

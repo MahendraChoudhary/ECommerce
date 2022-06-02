@@ -1,0 +1,48 @@
+{
+  "SwaggerEndPoints": [
+    {
+      "Key": "customer",
+      "TransformByOcelotConfig": true,
+      "Config": [
+        {
+          "Name": "Customers API",
+          "Version": "v1",
+          "Url": "https://localhost:7134/customer-swagger"
+        }
+      ]
+    },
+    {
+      "Key": "order",
+      "TransformByOcelotConfig": true,
+      "Config": [
+        {
+          "Name": "Orders API",
+          "Version": "v1",
+          "Url": "https://localhost:7134/order-swagger"
+        }
+      ]
+    },
+    {
+      "Key": "product",
+      "TransformByOcelotConfig": true,
+      "Config": [
+        {
+          "Name": "Products API",
+          "Version": "v1",
+          "Url": "https://localhost:7134/product-swagger"
+        }
+      ]
+    },
+    {
+      "Key": "search",
+      "TransformByOcelotConfig": true,
+      "Config": [
+        {
+          "Name": "Search API",
+          "Version": "v1",
+          "Url": "https://localhost:7134/search-swagger"
+        }
+      ]
+    }
+  ]
+}

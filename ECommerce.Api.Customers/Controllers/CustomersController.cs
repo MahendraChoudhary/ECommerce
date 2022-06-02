@@ -27,7 +27,7 @@
             return NotFound();
         }
 
-        [HttpGet]
+        [HttpGet(template:"all")]
         public async Task<IActionResult> GetCustomers()
         {
             var result = await customerProvider.GetCustomersAsync();

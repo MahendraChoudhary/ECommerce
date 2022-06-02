@@ -15,7 +15,7 @@
             this.orderProvider = orderProvider;
         }
 
-        [HttpGet]
+        [HttpGet(template:"all")]
         public async Task<IActionResult> GetOrders()
         {
             var result = await orderProvider.GetOrdersAsync();
