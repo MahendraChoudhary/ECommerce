@@ -11,7 +11,14 @@ FROM mcr.microsoft.com/dotnet/sdk:3.1-nanoserver-1903 AS build
 WORKDIR /src
 COPY ["ECommerce.Api.Customers/ECommerce.Api.Customers.csproj", "ECommerce.Api.Customers/"]
 RUN dotnet restore "ECommerce.Api.Customers/ECommerce.Api.Customers.csproj"
+
+COPY ["ECommerce.Api.Customers.Tests/ECommerce.Api.Customers.Tests.csproj", "ECommerce.Api.Customers.Tests/"]
+RUN dotnet restore "ECommerce.Api.Customers.Tests/ECommerce.Api.Customers.Tests.csproj"
+
 COPY . .
+
+RUN dotnet test "ECommerce.Api.Customers.Tests/ECommerce.Api.Customers.Tests.csproj" --verbosity normal
+
 WORKDIR "/src/ECommerce.Api.Customers"
 RUN dotnet build "ECommerce.Api.Customers.csproj" -c Release -o /app/build
 
