@@ -5,6 +5,8 @@
         public CustomerProfile()
         {
             CreateMap<Db.Customer, Models.Customer>();
+            CreateMap<Models.Customer, Db.Customer>()
+                .ForMember("Id", m => m.Ignore());
         }
     }
 }

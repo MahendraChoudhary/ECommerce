@@ -8,9 +8,9 @@
     [ApiController]
     public class CustomersController : ControllerBase
     {
-        private readonly ICustomerProvider customerProvider;
+        private readonly ICustomerService customerProvider;
 
-        public CustomersController(ICustomerProvider customerProvider)
+        public CustomersController(ICustomerService customerProvider)
         {
             this.customerProvider = customerProvider;
         }
@@ -25,6 +25,18 @@
             }
 
             return NotFound();
+        }
+
+        [HttpPost(template:"create")]
+        public async Task<IActionResult> CreateCustomer(Models.Customer customer)
+        {
+            var result = await customerProvider.CreateCustomerAsync(customer);
+            if (result.IsSuccess)
+            {
+                return Ok();
+            }
+
+            return BadRequest(result.ErrorMessage);
         }
 
         [HttpGet(template:"all")]

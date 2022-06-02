@@ -10,13 +10,13 @@
     using System.Linq;
     using System.Threading.Tasks;
 
-    public class CustomerProvider : ICustomerProvider
+    public class CustomerService : ICustomerService
     {
         private readonly CustomerDbContext customerDbContext;
-        private readonly ILogger<CustomerProvider> logger;
+        private readonly ILogger<CustomerService> logger;
         private readonly IMapper mapper;
 
-        public CustomerProvider(CustomerDbContext customerDbContext, ILogger<CustomerProvider> logger, IMapper mapper)
+        public CustomerService(CustomerDbContext customerDbContext, ILogger<CustomerService> logger, IMapper mapper)
         {
             this.customerDbContext = customerDbContext;
             this.logger = logger;
@@ -39,7 +39,8 @@
             }
         }
 
-        public async Task<(bool IsSuccess, Models.Customer Customer, string ErrorMessage)> GetCustomerAsync(int id)
+        public async Task<(bool IsSuccess, Models.Customer Customer, string ErrorMessage)> 
+            GetCustomerAsync(int id)
         {
             try
             {
@@ -59,7 +60,8 @@
             }
         }
 
-        public async Task<(bool IsSuccess, IEnumerable<Models.Customer> Customers, string ErrorMessage)> GetCustomersAsync()
+        public async Task<(bool IsSuccess, IEnumerable<Models.Customer> Customers, string ErrorMessage)> 
+            GetCustomersAsync()
         {
             try
             {
@@ -76,6 +78,23 @@
             {
                 logger.LogError(ex.ToString());
                 return (false, null, ex.Message);
+            }
+        }
+
+        public async Task<(bool IsSuccess, string ErrorMessage)> 
+            CreateCustomerAsync(Models.Customer customer)
+        {
+            try
+            {
+                var customerEntity = mapper.Map<Customer>(customer);
+                await customerDbContext.Customers.AddAsync(customerEntity);
+                await customerDbContext.SaveChangesAsync();
+                return (true, "");
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex.ToString());
+                return (false, ex.Message);
             }
         }
     }
