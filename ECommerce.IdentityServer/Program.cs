@@ -1,6 +1,7 @@
 using ECommerce.IdentityServer.Db;
 using ECommerce.IdentityServer.Identity;
 using ECommerce.IdentityServer.Models;
+using IdentityServer4.AspNetIdentity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,7 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services
     .AddDbContext<IdentityDb>(options => options.UseInMemoryDatabase("Users"))
-    .AddIdentity<IdentityUser, IdentityRole>()
+    .AddIdentity<AppUser, IdentityRole>()
     .AddEntityFrameworkStores<IdentityDb>()
     .AddTokenProvider<TokenService>("TokenService");
 
@@ -26,9 +27,10 @@ builder.Services
     .AddInMemoryApiScopes(Config.ApiScopes)
     .AddInMemoryClients(Config.Clients)
     .AddJwtBearerClientAuthentication()
-    .AddAspNetIdentity<IdentityUser>()
+    .AddAspNetIdentity<AppUser>()
     .AddDeveloperSigningCredential()
-    .AddResourceOwnerValidator<PasswordValidatorService>();
+    .AddResourceOwnerValidator<PasswordValidatorService>()
+    .AddProfileService<UserProfileService>();
 
 builder.Services
     .AddControllers();
@@ -37,6 +39,11 @@ builder.Services
     .AddSwaggerGen();
 
 var app = builder.Build();
+string? port = Environment.GetEnvironmentVariable("PORT"); 
+if (!string.IsNullOrWhiteSpace(port)) 
+{
+    app.Urls.Add("http://*:" + port); 
+}
 
 // Configure the HTTP request pipeline.
 app.UseSwagger();

@@ -15,12 +15,13 @@ namespace ECommerce.IdentityServer.Models
         [Required()]
         public string FirstName { get; set; }
 
-        public IdentityUser GetIdentityUser()
+        public AppUser GetAppUser()
         {
-            return new IdentityUser()
+            return new AppUser()
             {
                 Email = this.Email,
                 UserName = this.Email,
+                FirstName = this.FirstName
             };
         }
     }

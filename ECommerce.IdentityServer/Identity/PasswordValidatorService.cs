@@ -9,13 +9,13 @@ namespace ECommerce.IdentityServer.Identity
 {
     public class PasswordValidatorService : IResourceOwnerPasswordValidator
     {
-        private UserManager<IdentityUser> _userManager;
+        private UserManager<AppUser> _userManager;
         private readonly IEventService _events;
-        private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly SignInManager<AppUser> _signInManager;
 
-        public PasswordValidatorService(UserManager<IdentityUser> userManager,
+        public PasswordValidatorService(UserManager<AppUser> userManager,
             IEventService events,
-            SignInManager<IdentityUser> signInManager)
+            SignInManager<AppUser> signInManager)
         {
             _userManager = userManager;
             _events = events;

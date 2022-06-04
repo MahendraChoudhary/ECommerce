@@ -7,3 +7,5 @@ bin
 obj
 *.user
 *.suo
+/TestClient/.vs/TestClient/DesignTimeBuild/.dtbcache.v2
+/TestClient/.vs/TestClient/v17/.futdcache.v1

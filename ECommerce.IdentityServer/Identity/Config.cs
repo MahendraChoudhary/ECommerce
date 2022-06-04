@@ -8,7 +8,8 @@ namespace ECommerce.IdentityServer.Identity
             new IdentityResource[]
             {
                 new IdentityResources.OpenId(),
-                new IdentityResources.Email()
+                new IdentityResources.Email(),
+                new IdentityResources.Profile()
             };
 
         public static IEnumerable<ApiScope> ApiScopes =>
@@ -36,7 +37,8 @@ namespace ECommerce.IdentityServer.Identity
                     {
                         "openid",
                         "email",
-                        "customer"
+                        "customer",
+                        "profile"
                     },
                     AllowedGrantTypes= GrantTypes.ResourceOwnerPasswordAndClientCredentials,
                     RequirePkce= true,

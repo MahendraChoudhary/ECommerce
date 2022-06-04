@@ -9,9 +9,9 @@ namespace ECommerce.IdentityServer.Identity
     [ApiController]
     public class Register : ControllerBase
     {
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly UserManager<AppUser> _userManager;
 
-        public Register(UserManager<IdentityUser> userManager)
+        public Register(UserManager<AppUser> userManager)
         {
             _userManager = userManager;
         }
@@ -19,11 +19,11 @@ namespace ECommerce.IdentityServer.Identity
         [HttpPost]
         public async Task<ActionResult> RegisterUser(RegisterUser user)
         {
-            var identityUser = user.GetIdentityUser();
-            var result = await _userManager.CreateAsync(identityUser, user.Password);
+            var AppUser = user.GetAppUser();
+            var result = await _userManager.CreateAsync(AppUser, user.Password);
             if (result.Succeeded)
             {
-                await _userManager.AddToRoleAsync(identityUser, Constants.Roles["Customer"]);
+                await _userManager.AddToRoleAsync(AppUser, Constants.Roles["Customer"]);
                 return Ok();
             }
 
