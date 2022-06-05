@@ -39,6 +39,11 @@ namespace ECommerce.Api.Customers
             .UseSerilog()
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
+                    string? port = Environment.GetEnvironmentVariable("PORT");
+                    if (!string.IsNullOrWhiteSpace(port))
+                    {
+                        webBuilder.UseUrls("http://*:" + port);
+                    }
                     webBuilder.UseStartup<Startup>();
                 });
     }
