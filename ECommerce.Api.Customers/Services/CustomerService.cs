@@ -16,7 +16,9 @@
         private readonly ILogger<CustomerService> logger;
         private readonly IMapper mapper;
 
-        public CustomerService(CustomerDbContext customerDbContext, ILogger<CustomerService> logger, IMapper mapper)
+        public CustomerService(CustomerDbContext customerDbContext, 
+            ILogger<CustomerService> logger, 
+            IMapper mapper)
         {
             this.customerDbContext = customerDbContext;
             this.logger = logger;

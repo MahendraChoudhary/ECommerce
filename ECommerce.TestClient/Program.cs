@@ -2,4 +2,8 @@
 using ECommerce.TestClient;
 
 Console.WriteLine("Hello, World!");
-AuthenticationUtility.Login();
+
+MenuBuilder.Home.Display();
+MenuBuilder.Home.ProcessCommand(int.Parse(Console.ReadLine()));
+
+Console.ReadLine();

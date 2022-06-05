@@ -16,14 +16,18 @@ namespace ECommerce.IdentityServer.Identity
             _userManager = userManager;
         }
 
-        [HttpPost]
-        public async Task<ActionResult> RegisterUser(RegisterUser user)
+        [HttpPost("{isSeller}")]
+        public async Task<ActionResult> RegisterUser(RegisterUser user, bool isSeller = false)
         {
             var AppUser = user.GetAppUser();
             var result = await _userManager.CreateAsync(AppUser, user.Password);
             if (result.Succeeded)
             {
-                await _userManager.AddToRoleAsync(AppUser, Constants.Roles["Customer"]);
+                var roles = new List<string> { Constants.Roles["Customer"] };
+                if (isSeller)
+                    roles.Add(Constants.Roles["Seller"]);
+
+                await _userManager.AddToRolesAsync(AppUser, roles);
                 return Ok();
             }
 
