@@ -1,15 +1,35 @@
 using ECommerce.IdentityServer.Db;
 using ECommerce.IdentityServer.Identity;
 using ECommerce.IdentityServer.Models;
-using IdentityServer4.AspNetIdentity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using ECommerce.Helpers.Configuration;
+using Serilog;
+
+var config = new ConfigurationBuilder()
+                .AddJsonFile("appsettings.json")
+                .Build();
+//Initialize Logger
+Log.Logger = new LoggerConfiguration()
+    .ReadFrom.Configuration(config)
+    .WriteTo.Console()
+    .CreateLogger();
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Host.UseSerilog();
 
 // Add services to the container.
 builder.Services
-    .AddDbContext<IdentityDb>(options => options.UseInMemoryDatabase("Users"))
+    .AddDbContext<IdentityDb>(options =>
+    {
+        PostgresSettings postgresSettings = new PostgresSettings();
+        builder.Configuration.GetSection("Postgres").Bind(postgresSettings);
+        Log.Information(postgresSettings.ToString());
+        options.UseNpgsql($"Host={postgresSettings.Host};" +
+            $"Port={postgresSettings.Port};Username={postgresSettings.Username};" +
+            $"Password={postgresSettings.Password};Database={postgresSettings.Database};");
+    })
+
     .AddIdentity<AppUser, IdentityRole>()
     .AddEntityFrameworkStores<IdentityDb>()
     .AddTokenProvider<TokenService>("TokenService");
@@ -39,10 +59,17 @@ builder.Services
     .AddSwaggerGen();
 
 var app = builder.Build();
-string? port = Environment.GetEnvironmentVariable("PORT"); 
-if (!string.IsNullOrWhiteSpace(port)) 
+
+using (var scope = app.Services.GetRequiredService<IServiceScopeFactory>().CreateScope())
 {
-    app.Urls.Add("http://*:" + port); 
+    var context = scope.ServiceProvider.GetService<IdentityDb>();
+    context.Database.Migrate();
+}
+
+string? port = Environment.GetEnvironmentVariable("PORT");
+if (!string.IsNullOrWhiteSpace(port))
+{
+    app.Urls.Add("http://*:" + port);
 }
 
 // Configure the HTTP request pipeline.

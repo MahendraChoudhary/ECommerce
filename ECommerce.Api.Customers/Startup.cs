@@ -16,6 +16,7 @@ namespace ECommerce.Api.Customers
     using ECommerce.Helpers.Configuration;
     using Microsoft.AspNetCore.Authentication.JwtBearer;
     using Microsoft.IdentityModel.Tokens;
+    using Serilog;
 
     public class Startup
     {
@@ -47,16 +48,23 @@ namespace ECommerce.Api.Customers
             services.AddAutoMapper(typeof(Startup));
             services.AddDbContext<CustomerDbContext>(options =>
             {
-                options.UseInMemoryDatabase("Customers");
+                PostgresSettings postgresSettings = new PostgresSettings();
+                Configuration.GetSection("Postgres").Bind(postgresSettings);
+                Log.Information(postgresSettings.ToString());
+                options.UseNpgsql($"Host={postgresSettings.Host};" +
+                    $"Port={postgresSettings.Port};Username={postgresSettings.Username};" +
+                    $"Password={postgresSettings.Password};Database={postgresSettings.Database};");
             });
+
             services.AddControllers(options =>
             options.UseGeneralRoutePrefix("api/customer"));
             services.AddSwaggerGen();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, CustomerDbContext dbContext)
         {
+            dbContext.Database.Migrate();
             app.UseAuthentication();
             app.UseSwagger();
             app.UseSwaggerUI(c =>

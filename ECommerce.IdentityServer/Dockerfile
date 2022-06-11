@@ -10,6 +10,7 @@ WORKDIR /app
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
+COPY ["ECommerce.Helpers/ECommerce.Helpers.csproj", "ECommerce.Helpers/"]
 COPY ["ECommerce.IdentityServer/ECommerce.IdentityServer.csproj", "ECommerce.IdentityServer/"]
 RUN dotnet restore "ECommerce.IdentityServer/ECommerce.IdentityServer.csproj"
 COPY . .

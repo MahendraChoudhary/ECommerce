@@ -30,6 +30,7 @@ namespace ECommerce.Api.Customers
             }
             finally
             {
+                Log.Information("Stopping application.");
                 Log.CloseAndFlush();
             }
         }

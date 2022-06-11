@@ -11,20 +11,19 @@ namespace ECommerce.IdentityServer.Models
         {
             using (var scope = serviceProvider.CreateScope())
             {
-                var roleManager = scope.ServiceProvider.GetService<RoleManager<IdentityRole>>();
+                var dbContext = scope.ServiceProvider.GetService<IdentityDb>();
 
                 foreach (string role in Constants.Roles.Values)
                 {
+                    var roleStore = new RoleStore<IdentityRole>(dbContext);
 
-                    if (!(roleManager.RoleExistsAsync(role).Result))
+                    if (!dbContext.Roles.Any(r => r.Name == role))
                     {
-                        roleManager.CreateAsync(new IdentityRole
-                        {
-                            Name = role,
-                            NormalizedName= role,
-                        });
+                        roleStore.CreateAsync(new IdentityRole(role));
                     }
                 }
+
+                dbContext.SaveChanges();
             }
         }
     }
